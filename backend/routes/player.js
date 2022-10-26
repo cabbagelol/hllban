@@ -243,7 +243,7 @@ function raceGetOriginUserId(originName) {
         }
     };
     return Promise.race([ 
-        serviceApi('eaAPI', '/searchUser').query({name: originName}).get().then(r=>r.data)
+        serviceApi('steamAPI', '/searchUser').query({name: originName}).get().then(r=>r.data)
         .then(isdone.successListener('eaAPI')).catch(isdone.failListener('eaAPI')),
         // getUserProfileBySomeOtherWay(name).then(successListener()).catch(failListener()),
     ]).catch((err)=> {
@@ -304,11 +304,10 @@ function raceGetOriginUserId(originName) {
  *       404:
  *         description: player.notFound
  */
-
 router.post('/report', verifyJWT, verifyCaptcha,
     forbidPrivileges(['freezed','blacklisted']), [
     checkbody('data.game').isIn(config.supportGames),
-    checkbody('data.originName').isAscii().notEmpty(),
+    checkbody('data.steamId').notEmpty(),
     checkbody('data.cheatMethods').isArray().custom(cheatMethodsSanitizer),
     checkbody('data.videoLink').optional({checkFalsy: true}).isURL(),
     checkbody('data.description').isString().trim().isLength({min: 1, max: 65535}),  
@@ -319,20 +318,20 @@ async (req, res, next)=>{
         if(!validateErr.isEmpty())
             return res.status(400).json({error:1, code:'report.bad', message:validateErr.array()});
         
-        const originUserId = await raceGetOriginUserId(req.body.data.originName);
-        if(!originUserId)
+        const steamUserId = req.body.data.steamId; // await raceGetOriginUserId(req.body.data.steamId);
+        if(!steamUserId)
             return res.status(404).json({error:1, code:'report.notFound', message:'Report user not found.'});
         /** @type {{username:string, personaId:string, userId:string}} */
-        const profile = await serviceApi('eaAPI', '/userInfo').query({userId: originUserId}).get().then(r=>r.data);
+        const profile = await serviceApi('steamAPI', '/userInfo').query({userId: steamUserId}).get().then(r=>r.data);
 
         // now the user being reported is found
         let avatarLink;
-        try {   // get/update avatar each report
-            avatarLink = await serviceApi('eaAPI', '/userAvatar').query({userId: profile.userId}).get().then(r=>r.data); // this step is not such important, set avatar to default if it fail
-        } catch(err) {
-            logger.warn('/report: error while fetching user\'s avatar');
-            avatarLink = 'https://secure.download.dm.origin.com/production/avatar/prod/1/599/208x208.JPEG';
-        }
+        // try {   // get/update avatar each report
+        //     avatarLink = await serviceApi('steamAPI', '/userAvatar').query({userId: profile.userId}).get().then(r=>r.data); // this step is not such important, set avatar to default if it fail
+        // } catch(err) {
+        //     logger.warn('/report: error while fetching user\'s avatar');
+        //     avatarLink = 'https://secure.download.dm.origin.com/production/avatar/prod/1/599/208x208.JPEG';
+        // }
         /** @type {import('../typedef.js').Player|undefined} */
         const reported = await db.select('*').from('players').where({originUserId: profile.userId}).first();
         const player = {

@@ -103,6 +103,7 @@ async (req, res, next) => {
         let data
         if (registrant.userId) {
             data = {
+                email: registrant.email,
                 originName: registrant.originName,
                 originEmail: registrant.originEmail,
                 originUserId: registrant.originUserId,
@@ -114,6 +115,7 @@ async (req, res, next) => {
             data = {
                 username: registrant.username,
                 password: registrant.password,
+                email: registrant.email,
                 originName: registrant.originName,
                 originEmail: registrant.originEmail,
                 originUserId: registrant.originUserId,
@@ -128,9 +130,8 @@ async (req, res, next) => {
 
         await db('verifications').where({uniqCode: code}).delete();
         logger.info('users.signupVerify Success:', {name: data.username});
-
         siteEvent.emit('action', {method: 'register', params: {user: data}});
-        return res.status(201).json({success: 1, code: 'signup.success', message: 'Welcome to BFBan!'});
+        return res.status(201).json({success: 1, code: 'signup.success', message: 'Welcome!'});
     } catch (err) {
         next(err);
     }
@@ -350,14 +351,14 @@ async function showUserInfo(req, res, next) {
             joinTime: user.createTime,
             lastOnlineTime: user.updateTime,
             subscribes: user.subscribes,
-            origin: user.attr.showOrigin === true // user set it public
-            || (req.user && userHasRoles(req.user, ['admin', 'super', 'root', 'dev'])) // no limit for admin
-            || (req.user && req.user.id === user.id) ? // for self
-                {originName: user.originName, originUserId: user.originUserId} : null,
+            // origin: user.attr.showOrigin === true // user set it public
+            // || (req.user && userHasRoles(req.user, ['admin', 'super', 'root', 'dev'])) // no limit for admin
+            // || (req.user && req.user.id === user.id) ? // for self
+            //     {originName: user.originName, originUserId: user.originUserId} : null,
             attr: userShowAttributes(user.attr,
                 (req.user && req.user.id === user.id), // self, show private info
                 (req.user && userHasRoles(req.user, ['admin', 'super', 'root', 'dev']))), // no limit for admin
-            reportnum: reportnum,
+            reportnum: reportnum ?? 0,
             introduction: user.introduction,
         };
 

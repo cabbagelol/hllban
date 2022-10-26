@@ -53,9 +53,9 @@ async function sendRegisterVerify(username, address, language, code) {
         config.mail.user, address, '', subject, [
             {
                 data: html
-                    .replaceAll(/\$\{username\}/g, username)
-                    .replaceAll(/\$\{website\}/g, domain)
-                    .replaceAll(/\$\{code\}/g, code),
+                    .replace(/\$\{username\}/g, username)
+                    .replace(/\$\{website\}/g, domain)
+                    .replace(/\$\{code\}/g, code),
                 alternative: true
             }
         ]

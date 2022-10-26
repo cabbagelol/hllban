@@ -535,7 +535,7 @@ export default new BFBAN({
       const that = this;
       let params = {name: '', skip: this.skip - 1, limit: this.limit};
 
-      if (!this.load) return ;
+      if (this.load) return;
 
       return new Promise((resolve, reject) => {
         that.load = true;

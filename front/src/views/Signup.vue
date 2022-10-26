@@ -48,13 +48,9 @@
               </div>
 
               <div v-show="stepsIndex === 1">
-                <FormItem :label="$t('signup.form.originEmail')" prop="originEmail">
-                  <Input v-model="signup.originEmail" size="large"
-                         :placeholder="$t('signup.placeholder.originEmail')"/>
-                </FormItem>
-                <FormItem :label="$t('signup.form.originName')" prop="originName">
-                  <Input v-model="signup.originName" size="large"
-                         :placeholder="$t('signup.placeholder.originName')"/>
+                <FormItem :label="$t('signup.form.email')" prop="email">
+                  <Input v-model="signup.email" size="large"
+                         :placeholder="$t('signup.placeholder.email')"/>
                 </FormItem>
               </div>
 
@@ -159,11 +155,8 @@ export default new BFBAN({
         password: [
           {required: true, min: 6, max: 40, trigger: 'blur'}
         ],
-        originEmail: [
+        email: [
           {required: true, type: 'email', trigger: 'change'}
-        ],
-        originName: [
-          {required: true, trigger: 'blur'}
         ],
         captcha: [
           {required: true, min: 4, max: 4, trigger: 'change'}
@@ -172,8 +165,7 @@ export default new BFBAN({
       signup: {
         username: '',
         password: '',
-        originEmail: '',
-        originName: '',
+        email: '',
         captcha: '',
       },
       backServiceMsg: '',
@@ -189,7 +181,7 @@ export default new BFBAN({
     onSignup() {
       const that = this;
       this.$refs['formValidate'].validate(valid => {
-        let {username, password, originEmail, originName, captcha} = this.signup;
+        let {username, password, email, captcha} = this.signup;
 
         // 检查表单
         if (!valid) {
@@ -204,8 +196,7 @@ export default new BFBAN({
             data: {
               username,
               password,
-              originEmail,	// must match the originName below
-              originName,	// must have one of bf series game
+              email,
               language: mail.exchangeLangField(this.$root.$i18n.locale)
             },
             encryptCaptcha: this.$refs.captcha.hash,
@@ -244,8 +235,7 @@ export default new BFBAN({
                         captcha = true,
                         username = true,
                         password = true,
-                        originEmail = true,
-                        originName = true,
+                        email = true,
                         stepsIndex = true
                       }) {
       if (captcha)
@@ -254,10 +244,8 @@ export default new BFBAN({
         this.signup.username = '';
       if (password)
         this.signup.password = '';
-      if (originEmail)
-        this.signup.originEmail = '';
-      if (originName)
-        this.signup.originName = '';
+      if (email)
+        this.signup.email = '';
       if (stepsIndex)
         this.stepsIndex = 0;
     },
