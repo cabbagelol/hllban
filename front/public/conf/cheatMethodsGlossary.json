@@ -1,0 +1,49 @@
+{
+  "title": "cheatMethodsGlossary",
+  "child": [
+    {
+      "value": "invisable",
+      "values": [
+        "invisable",
+        "invisible",
+        "stealth"
+      ]
+    },
+    {
+      "value": "wallhack",
+      "values": [
+        "wallhack"
+      ]
+    },
+    {
+      "value": "aimbot",
+      "values": [
+        "aimbot"
+      ]
+    },
+    {
+      "value": "teleport",
+      "values": [
+        "teleport"
+      ]
+    },
+    {
+      "value": "magicBullet",
+      "values": [
+        "magicBullet"
+      ]
+    },
+    {
+      "value": "gadgetModify",
+      "values": [
+        "gadgetModify"
+      ]
+    },
+    {
+      "value": "damageChange",
+      "values": [
+        "damageChange"
+      ]
+    }
+  ]
+}

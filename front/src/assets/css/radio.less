@@ -1,0 +1,54 @@
+.game-type {
+  user-select: none;
+
+  label[aria-radio] {
+    text-align: center;
+    min-width: 130px !important;
+    animation: all .25s;
+    background-size: cover;
+    background-position: center;
+  }
+
+  label:first-child {
+    min-width: inherit;
+  }
+
+  .ivu-badge-count {
+    top: -15px;
+    right: -20px;
+  }
+
+  // large
+  .ivu-radio-large img {
+    margin-top: 5px !important;
+    animation: all 1s;
+    height: 16px;
+  }
+
+  .ivu-radio-default img {
+    margin-top: 2px !important;
+    height: 13px;
+  }
+
+  .ivu-radio-group-item {
+    background-size: 100%;
+  }
+
+  .ivu-radio-group-item.gametype-select {
+    position: relative;
+    animation: gameAnimation 15s infinite;
+  }
+
+  @keyframes gameAnimation {
+    0% {
+      background-position-y: 50%;
+    }
+    50% {
+      background-position-y: 0%;
+      background-size: 120% !important;
+    }
+    100% {
+      background-position-y: 50%;
+    }
+  }
+}

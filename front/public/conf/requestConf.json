@@ -1,0 +1,22 @@
+{
+  "requestDevelopmentName": "development",
+  "requestProductionName": "production",
+  "requestUploadName": "upload",
+  "child": {
+    "development": {
+      "protocol": "http",
+      "host": "127.0.0.1:3000",
+      "pathname": "/api/"
+    },
+    "upload": {
+      "protocol": "https",
+      "host": "file.hllban.com",
+      "pathname": "/api/"
+    },
+    "production": {
+      "protocol": "https",
+      "host": "hllban.com",
+      "pathname": "/api/"
+    }
+  }
+}

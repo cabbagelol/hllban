@@ -81,7 +81,7 @@ class ServiceApiContext {
     }
 }
 
-/** @param {'eaAPI'|'msGraphAPI'} svcName */
+/** @param {'steamAPI'} svcName */
 function serviceApi(svcName, path='/', exception=true, auth=false) {
     assert(config.services[svcName] && config.services[svcName].url, 'serviceAPI: Cannot find such service');
     return new ServiceApiContext(config.services[svcName].url, path, {

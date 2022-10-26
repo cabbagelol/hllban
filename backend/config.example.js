@@ -23,9 +23,17 @@ const config = {
         password: 'weakpasswd',
         database: 'hllban'
     },
+    // using cloudflare?
+    cloudflare: true,
+    // github
+    github: {},
     // gravatar
     gravatar: {
         domain: 'https://www.gravatar.com'
+    },
+    webhook: {
+        senderUrl: '',	// use cloudflare worker to proxy webhook request
+        token: '',		// token it use
     },
     mail: {
         host: 'smtp.somewhere.com',
@@ -52,8 +60,9 @@ const config = {
         // PROCESS mode will check if the service has launched before, if not, start the service as a process
         // if none is specified, service/loader.js will not launch the service script, use it when the service is not deploy locally
         steamAPI: {
-
-        }
+            deployment: 'THREAD',
+            url: 'http://unix://?/pipe/hllban/eaAPI:',
+        },
     },
     // DYNAMIC CONFIGURE BEGIN
     supportLanguages: ['zh-CN', 'en-US'],

@@ -79,7 +79,7 @@ class Logger {
     }
 }
 
-const logger = new Logger('BFBAN', config.logLevel);
+const logger = new Logger('HLLBAN', config.logLevel);
 
 /** @param {string} tag @param {string} message */
 function prettyLogPrinter(tag, message, intent=4) {

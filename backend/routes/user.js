@@ -21,8 +21,7 @@ const router = express.Router();
 router.post('/signup', verifyCaptcha, [
     checkbody('data.username').isString().trim().isAlphanumeric('en-US', {ignore: '-_'}).isLength({min: 1, max: 40}),
     checkbody('data.password').isString().trim().isLength({min: 1, max: 40}),
-    checkbody('data.originEmail').isString().trim().isEmail(),
-    checkbody('data.originName').isString().unescape().trim().notEmpty(),
+    checkbody('data.email').isString().trim().isEmail(),
     checkbody('data.language').isIn(config.supportLanguages)
 ], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */
 async (req, res, next) => {
@@ -33,32 +32,27 @@ async (req, res, next) => {
 
         // all data well-formed, ready to flight
         /** @type {{username:string, password:string, originName:string, originEmail:string}} */
-        const {username, password, originName, originEmail} = req.body.data;
+        const {username, password, email} = req.body.data;
 
-        // does anyone occupied?
+        // does anyone occupied
         if ((await db.select('username').from('verifications').where({username: username, type: 'register'}).union([
             db.select('username').from('users').where({username: username})
         ])).length != 0)
             return res.status(400).json({error: 1, code: 'signup.usernameExist'});
 
-        // now check the origin account user binded
-        var originUserId = await serviceApi('eaAPI', '/searchUser').query({email: originEmail}).get().then(r => r.data);
-        if (!originUserId)
-            return res.status(400).json({error: 1, code: 'signup.originNotFound'});
-        const originUserInfo = await serviceApi('eaAPI', '/userInfo').query({userId: originUserId}).get().then(r => r.data);
-        if (originUserInfo.username !== originName) // verify again
-            return res.status(400).json({error: 1, code: 'signup.originNotFound'});
-        if ((await db.select('originUserId').from('verifications').where({originUserId: originUserId}).union([
-            db.select('originUserId').from('users').where({originUserId: originUserId}) // check duplicated binding
-        ])).length != 0)
-            return res.status(400).json({error: 1, code: 'signup.originBindingExist'});
-        // check whether the user has at least 1 battlefield game
-        /** @type {string[]} */
-        const userGames = await serviceApi('eaAPI', '/userGames', false).query({userId: originUserId}).get().then(r => r.data);
+        // now check the account user binded
+        // var originUserId = await serviceApi('steamAPI', '/searchUser').query({email: email}).get().then(r => r.data);
+        // if (!originUserId)
+        //     return res.status(400).json({error: 1, code: 'signup.originNotFound'});
 
-        // 检查库存中含有Battlefield系列游戏
-        if (userGames && userGames.indexOf("Battlefield").length >= 0)
-            return res.status(400).json({error: 1, code: 'signup.gameNotShowed'});
+        // const originUserInfo = await serviceApi('steamAPI', '/userInfo').query({userId: originUserId}).get().then(r => r.data);
+        // if (originUserInfo.username !== originName) // verify again
+        //     return res.status(400).json({error: 1, code: 'signup.originNotFound'});
+
+        if ((await db.select('email').from('verifications').where({email: email}).union([
+            db.select('email').from('users').where({email: email}) // check duplicated binding
+        ])).length != 0)
+            return res.status(400).json({error: 1, code: 'signup.emailBindingExist'});
 
         // no mistakes detected, generate a unique string for register validation
         const randomStr = misc.generateRandomString(127);
@@ -68,16 +62,13 @@ async (req, res, next) => {
             username: username,
             uniqCode: randomStr,
             password: passwdHash,
-            originName: originName,
-            originEmail: originEmail,
-            originUserId: originUserId,
-            originPersonaId: originUserInfo.personaId,
+            email: email,
             expiresTime: new Date(Date.now() + 1000 * 60 * 60 * 4), // 4h
             createTime: new Date()
         });
-        await sendRegisterVerify(username, originName, originEmail, req.body.data.language, randomStr);
-        logger.info('users.signup Success:', {username, originName, originEmail, randomStr});
-        return res.status(201).json({success: 1, code: 'signup.needVerify', message: 'Verify Email to join BFBan!'});
+        await sendRegisterVerify(username, email, req.body.data.language, randomStr);
+        logger.info('users.signup Success:', {username, email, randomStr});
+        return res.status(201).json({success: 1, code: 'signup.needVerify', message: 'Verify Email to join!'});
     } catch (err) {
         if (err instanceof ServiceApiError) {
             logger.error(`ServiceApiError ${err.statusCode} ${err.message}`, err.body, err.statusCode > 0 ? err.stack : '');

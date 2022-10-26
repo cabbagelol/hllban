@@ -1,0 +1,48 @@
+{
+  "title": "footer",
+  "child": {
+    "row": [
+      {
+        "text": "footer.column.col2.title",
+        "child": [
+
+        ]
+      },
+      {
+        "text": "footer.column.col3.title",
+        "child": [
+          {
+            "text": "header.report",
+            "src": "report",
+            "insideLang": true
+          },
+          {
+            "text": "header.about",
+            "src": "about",
+            "insideLang": true
+          },
+          {
+            "text": "link.title",
+            "src": "link",
+            "insideLang": true
+          },
+          {
+            "text": "header.cheaters",
+            "src": "player_list",
+            "insideLang": true
+          },
+          {
+            "text": "sitestats.title",
+            "src": "site_stats",
+            "insideLang": true
+          }
+        ]
+      },
+      {
+        "text": "footer.column.col4.title",
+        "child": [
+        ]
+      }
+    ]
+  }
+}

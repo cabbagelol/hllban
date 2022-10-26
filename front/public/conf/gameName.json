@@ -1,0 +1,13 @@
+{
+  "defaultIndex": 0,
+  "default": "bf1",
+  "child": [
+    {
+      "value": "hll",
+      "full_name": "hll",
+      "bk_file": "images/games/bf1",
+      "bk_src": "//media.contentapi.ea.com/content/dam/gin/images/2017/01/battlefield-1-keyart-5452x3859.jpg.adapt.crop1x1.767p.jpg",
+      "logo_src": "//media.contentapi.ea.com/content/dam/gin/common/logos/layer-1.png"
+    }
+  ]
+}
